@@ -1,0 +1,14 @@
+{
+  "name": "tic-tac-toe-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Node.js-only backend for the tic-tac-toe web app",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  }
+}
