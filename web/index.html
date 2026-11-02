@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Local-first tic-tac-toe with two-player and computer games, history, a leaderboard and demo admin stats.">
+  <title>Tic-Tac-Toe</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("ttt.theme")||"dark"}catch(e){}</script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#game" id="brand" aria-label="Tic-Tac-Toe home"><span class="brand-mark" aria-hidden="true">#</span>Tic-Tac-Toe</a>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab" type="button" role="tab" id="tab-game" aria-controls="panel-game" aria-selected="true" tabindex="0" data-tab="game">Play</button>
+        <button class="tab" type="button" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" tabindex="-1" data-tab="history">History</button>
+        <button class="tab" type="button" role="tab" id="tab-leaderboard" aria-controls="panel-leaderboard" aria-selected="false" tabindex="-1" data-tab="leaderboard">Leaderboard</button>
+        <button class="tab" type="button" role="tab" id="tab-admin" aria-controls="panel-admin" aria-selected="false" tabindex="-1" data-tab="admin">Admin</button>
+      </nav>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span id="theme-icon" aria-hidden="true">☀</span></button>
+    </div>
+  </header>
+
+  <div class="local-banner" role="note"><span class="dot" aria-hidden="true"></span>Local mode — progress saved on this device. No account needed.</div>
+
+  <main id="main" tabindex="-1">
+    <section class="panel" id="panel-game" role="tabpanel" aria-labelledby="tab-game">
+      <div class="page-head">
+        <div><p class="eyebrow">Local game</p><h1>Play</h1></div>
+        <span class="pill" id="mode-pill">vs Computer</span>
+      </div>
+      <div class="game-layout">
+        <div class="card board-card">
+          <div class="game-meta"><p><span id="identity">You are <strong>X</strong></span> · <span id="turn-label">Your turn</span></p><p class="muted small" id="game-number">Game 1</p></div>
+          <div class="board" id="board" role="group" aria-label="Tic-tac-toe board"></div>
+          <p class="status-line" id="game-status" aria-live="polite" aria-atomic="true">Your turn — make a move.</p>
+          <div id="result-slot"></div>
+        </div>
+        <aside class="game-side">
+          <div class="card stack">
+            <h2>Score</h2>
+            <p class="score" id="score" aria-live="polite">0 wins · 0 losses · 0 draws</p>
+            <button class="btn primary" id="new-game" type="button">New game</button>
+            <button class="btn ghost" id="reset-score" type="button">Reset score</button>
+          </div>
+          <div class="card stack">
+            <fieldset class="fieldset">
+              <legend>Opponent</legend>
+              <label class="choice"><input type="radio" name="mode" value="computer" checked><span>Computer</span></label>
+              <label class="choice"><input type="radio" name="mode" value="human"><span>Two players</span></label>
+            </fieldset>
+            <p class="helper" id="mode-help">You play X. The computer plays O.</p>
+          </div>
+          <div class="card">
+            <h2 class="small-title">Keyboard play</h2>
+            <p class="helper">Use arrow keys to move around the board, Home/End to jump, and Enter or Space to play.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history" hidden>
+      <div class="page-head"><div><p class="eyebrow">On this device</p><h1>History</h1></div><p class="muted" id="history-count">0 games</p></div>
+      <div id="history-empty" class="empty" hidden><h2>No games yet</h2><p>Finish a game and it will appear here.</p><button class="btn primary" type="button" data-go="game">Start a game</button></div>
+      <ul class="history-list" id="history-list" aria-label="Finished games"></ul>
+    </section>
+
+    <section class="panel" id="panel-leaderboard" role="tabpanel" aria-labelledby="tab-leaderboard" hidden>
+      <div class="page-head"><div><p class="eyebrow">On this device</p><h1>Leaderboard</h1></div><p class="muted small">Ranked by wins · ties broken by fewer losses</p></div>
+      <div id="leaderboard-empty" class="empty" hidden><h2>No rankings yet</h2><p>Finish a game to put a player on the board.</p><button class="btn primary" type="button" data-go="game">Play a game</button></div>
+      <div class="table-wrap" id="leaderboard-wrap"><table><thead><tr><th scope="col">Rank</th><th scope="col">Player</th><th scope="col">W</th><th scope="col">L</th><th scope="col">D</th><th scope="col">Win rate</th></tr></thead><tbody id="leaderboard-body"></tbody></table></div>
+    </section>
+
+    <section class="panel" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+      <div class="page-head"><div><p class="eyebrow">Demo backoffice</p><h1>Admin stats</h1></div><button class="btn danger" id="reset-data" type="button">Reset all data</button></div>
+      <p class="alert info" role="note"><strong>Demo stats only.</strong> These figures come from games saved in this browser. The online API is not connected in this phase.</p>
+      <div class="metric-grid" id="metrics"></div>
+      <div class="card stack">
+        <div class="row between"><h2>Result split</h2><span class="muted small" id="updated-at">No games yet</span></div>
+        <div class="results" id="results"></div>
+      </div>
+      <div class="card stack">
+        <h2>Recent games</h2>
+        <div class="table-wrap" id="recent-wrap"><table><thead><tr><th scope="col">When</th><th scope="col">Mode</th><th scope="col">Players</th><th scope="col">Result</th></tr></thead><tbody id="recent-body"></tbody></table></div>
+        <p class="helper" id="recent-empty" hidden>No games recorded yet.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">Tic-tac-toe v1 · Local-first build · Online play is not wired yet.</footer>
+  <noscript><p class="noscript">This game needs JavaScript enabled to play.</p></noscript>
+</body>
+</html>
